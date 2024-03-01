@@ -15,6 +15,20 @@ def create_user(username : str, password : str):
     else:
         return True 
     
+def create_post(content : str, visibility : str, owner_id : str, anonymous : bool, color : str, title : str = None):
+    connection = sqlite3.connect('clear_database.db')
+    cursor = connection.cursor()
+    post_id = uuid.uuid4()
+
+    try:
+        with connection:
+            cursor.execute("INSERT INTO Post VALUES(?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)", (post_id, title, content, visibility, owner_id, int(anonymous), color))
+    except Exception as e:
+        return e
+    else:
+        return True
+        
+    
 def get_post(post_id : str):
     connection = sqlite3.connect('clear_database.db')
     cursor = connection.cursor()
@@ -27,6 +41,8 @@ def get_post(post_id : str):
         return models.EntryInternal(title=data[1], content=data[2], timestamp=data[3], visibility=data[4], owner_username=username, owner_id=data[5], anonymous=bool(data[6]), color=data[7])
     else:
         return None
+    
+
     
 
 
