@@ -11,12 +11,25 @@ def read_root():
 @app.get("/posts/get/{id}")
 def read_post(id : str):
     '''This path will be used to get a single post.'''
-    return id
+    data = database.get_post(id)
+
+    composed_data = {
+        "title" : data.title,
+        "content" : data.content,
+        "timestamp" : data.timestamp,
+        "visibility" : data.visibility
+    }
+
+    if (data.anonymous):
+        composed_data["owner_username"] = "Anonymous"
+    else:
+        composed_data["owner_username"] = data.owner_username
+    
+    return models.EntryToSend(composed_data)
 
 @app.post("/posts/create")
 def create_post(content : str, visibility : str, anonymous : bool, color : str, title : str = None):
     return content
-
 
 @app.post("/user/login")
 def login_and_get_token():
