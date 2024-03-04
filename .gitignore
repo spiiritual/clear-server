@@ -1,3 +1,4 @@
 clear_database.db
 .venv/
 __pycache__/
+.env

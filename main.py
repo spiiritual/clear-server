@@ -1,5 +1,7 @@
 from fastapi import FastAPI
+from openai import OpenAI
 import models
+import os
 import database
 
 app = FastAPI()
@@ -25,7 +27,7 @@ def read_post(id : str):
     else:
         composed_data["owner_username"] = data.owner_username
     
-    return models.EntryToSend(composed_data)
+    return models.SuccessfulResponse(response=models.EntryToSend(composed_data))
 
 @app.post("/posts/create")
 def create_post(content : str, visibility : str, anonymous : bool, color : str, title : str = None):
@@ -48,4 +50,16 @@ def create_user(username : str, password : str):
 def get_username():
     return "placrholder"
 
+@app.post("/chatgpt/shit")
+def get_chatgpt_response(text : str):
+    client = OpenAI()
 
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role" : "system", "content" : "You are an assistant for a mental health journaling app. Summarize the user's input into bullet points that won't trigger the user."},
+            {"role" : "user", "content" : text}
+        ]
+    )
+
+    return response.choices[0].message.content
