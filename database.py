@@ -42,6 +42,34 @@ def get_post(post_id : str):
     else:
         return None
     
+def get_user_for_login(username : str):
+    connection = sqlite3.connect('clear_database.db')
+    cursor = connection.cursor()
+
+    with connection:
+        data = cursor.execute("SELECT * FROM User WHERE username = ?", (username,))
+
+    if data is not None:
+        return models.User(user_id=data[0], username=data[1], password=data[2])
+    else:
+        return None
+
+def get_user_by_id(id : str):
+    connection = sqlite3.connect('clear_database.db')
+    cursor = connection.cursor()
+
+    with connection:
+        data = cursor.execute("SELECT * FROM User WHERE user_id = ?", (id,))
+
+    if data is not None:
+        return models.User(user_id=data[0], username=data[1], password=data[2])
+    else:
+        return None
+
+
+
+
+    
 
     
 

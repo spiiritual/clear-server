@@ -25,3 +25,8 @@ class SuccessfulResponse(BaseModel):
 class UnsuccessfulResponse(BaseModel):
     status : str = Field(default="failure")
     message : str
+
+class User(BaseModel):
+    user_id : str
+    username : str
+    password : str
